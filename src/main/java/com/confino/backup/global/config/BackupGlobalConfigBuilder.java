@@ -32,8 +32,8 @@ public class BackupGlobalConfigBuilder extends Builder {
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
-        // This shows how you can consult the global configuration of the builder
-    	listener.getLogger().println("Destination folder: " + getDescriptor().getDestinationFolder());
+        BackupUtils.performBackup(getDescriptor().getDestinationFolder());
+    	listener.getLogger().println("Created " + PluginConstants.BACKUP_NAME + " in " + getDescriptor().getDestinationFolder());
         return true;
     }
 
@@ -45,14 +45,6 @@ public class BackupGlobalConfigBuilder extends Builder {
         return (DescriptorImpl)super.getDescriptor();
     }
 
-    /**
-     * Descriptor for {@link BackupGlobalConfigBuilder}. Used as a singleton.
-     * The class is marked as public so that it can be accessed from views.
-     *
-     * <p>
-     * See <tt>src/main/resources/hudson/plugins/hello_world/HelloWorldBuilder/*.jelly</tt>
-     * for the actual HTML fragment for the configuration screen.
-     */
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
         /**
@@ -87,7 +79,7 @@ public class BackupGlobalConfigBuilder extends Builder {
          * This human readable name is used in the configuration screen.
          */
         public String getDisplayName() {
-            return "Say hello world";
+            return "Backup Global Configuration";
         }
 
         @Override

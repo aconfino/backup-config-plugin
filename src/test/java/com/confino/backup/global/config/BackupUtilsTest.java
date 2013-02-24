@@ -12,10 +12,21 @@ import org.junit.Test;
 public class BackupUtilsTest {
 	
 	String jenkinsHome = "src/test/resources";
+	String destinationFolder = "c:/tools";
 	
 	@Before
 	public void setup(){
 		System.setProperty("JENKINS_HOME", jenkinsHome);
+	}
+	
+	@Test
+	public void performBackup(){
+		assertTrue(new File(destinationFolder).exists());
+		BackupUtils.performBackup(destinationFolder);
+		File savedFile = new File(destinationFolder + "/jenkins-global-config.zip");
+		assertTrue(savedFile.exists());
+		assertTrue(savedFile.length() == new Long(1015));
+		savedFile.delete();
 	}
 	
 	@Test
