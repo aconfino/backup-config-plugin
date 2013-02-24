@@ -1,0 +1,7 @@
+<!--
+  This view is used to render the installed plugins page.
+-->
+<div>
+  A build step that backs up the global configuration files.
+  Please note that this plugin does not store any job level configuration data.
+</div>
