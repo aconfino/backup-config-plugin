@@ -52,6 +52,10 @@ public class BackupGlobalConfigBuilder extends Builder {
          * simply store it in a field and call save().
          */
         private String destinationFolder;
+        
+        public DescriptorImpl (){
+        	load();  // load the config data on startup
+        }
 
         /**
          * Performs on-the-fly validation of the form field 'destinationFolder'.

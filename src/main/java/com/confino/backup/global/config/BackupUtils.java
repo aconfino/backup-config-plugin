@@ -15,6 +15,9 @@ public class BackupUtils {
 	private static final String JENKINS_HOME = System.getProperty("JENKINS_HOME");
 
 	public static void performBackup(String destinationDirectory){
+		if(!new File(destinationDirectory).exists()){
+			throw new RuntimeException("The destination directory " + destinationDirectory + " does not exists.  Cannot perform backup of the configuration files.");
+		}
 		File[] files = getConfigFiles();
 		zipFiles(files, destinationDirectory);
 	}
