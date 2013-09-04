@@ -1,0 +1,30 @@
+import hudson.model.*
+import hudson.triggers.*
+import java.util.Random
+
+for(item in Hudson.instance.items) {
+
+  hasTimerTrigger = false;
+  
+  for(trigger in item.triggers.values()) {
+	if(trigger instanceof TimerTrigger) {
+		println(item.name + " has a timer trigger")
+		hasTimerTrigger = true;               
+	} 
+  }
+  
+  if (!hasTimerTrigger){
+		Random random = new Random()
+		int randomMinutes = random.nextInt(60)
+		int randomHours = random.nextInt(24)
+		int firstRandomDay = random.nextInt(14)
+		int secondRandomDay = firstRandomDay + 14;
+		String cronSpec = "$randomMinutes $randomHours $firstRandomDay,$secondRandomDay * *"
+	
+		timerTrigger = new TimerTrigger(cronSpec)
+		item.addTrigger(timerTrigger)
+		item.save()
+		println("added timer $cronSpec to " + item.name)
+	}
+
+}
