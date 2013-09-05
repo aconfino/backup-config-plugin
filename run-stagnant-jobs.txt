@@ -1,40 +1,23 @@
 import hudson.model.*
-import hudson.node_monitors.*
-import hudson.slaves.*
-import java.util.concurrent.*
-jenkins = Hudson.instance
-// Define hour to compare (hour=24 will find builds that were built more than 1 day ago)
-hour=24;
-minute=60;
-second=60;
-oneDayInSecond=hour*minute*second;
+
+days=90
+//secondsSinceLastBuild=days*24*60*60;
+secondsSinceLastBuild=1;
 now=Calendar.instance;
-list=[];
 
-println("The build is run at ${now.time}");
+// TODO - pass job parameters?
+// TODO - filter on build step
+// TODO - figure out how to stagger builds
 
-for (item in jenkins.items){
-   println("\t ${item.name}");
-   // Ignore project that contains freeze or patch case insensitive
-   if (item.name ==~ /(?i)(freeze|patch).*/){
-       println("\t Ignored as it is a freeze or patch build");
-    }else if (!item.disabled&&item.getLastBuild()!=null){
+for (item in Hudson.instance.items){
+   if (!item.disabled&&item.getLastBuild()!=null){
        build_time=item.getLastBuild().getTimestamp();
-      if (now.time.time/1000-build_time.time.time/1000>oneDayInSecond){
-          println("\t\tLast build was built in more than ${hour} hours ago");
-          println("\t\tLast built was at ${build_time.time}");
-		
-          list<< item;
-      }
-   }else if (item.disabled){
-        println("\t\tProject is disabled"); 
+       if (now.time.time/1000-build_time.time.time/1000 > secondsSinceLastBuild){
+		  cause = new hudson.model.Cause.RemoteCause("some computer", "bulk start")
+		  item.scheduleBuild(cause)
+		  println("$item.name was scheduled for a build")
+      } else {
+	      println("$item.name is an active job")
+	  }
    }
-} 
-
-if (list.size()>0){
-  println("Please take a look at following projects:");
-  for (item in list){
-     println("\t ${item.name}"); 
-  }
-  return 1;
-}
+ }

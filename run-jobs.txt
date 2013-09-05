@@ -6,5 +6,5 @@ activeJobs = hudson.model.Hudson.instance.items.findAll{job -> job.isBuildable()
 startServer = "admin computer"
 startNote   = "bulk start"
 cause = new hudson.model.Cause.RemoteCause(startServer, startNote)
-activeJobs .each{run -> run.scheduleBuild(cause)}
+activeJobs .each{run -> println(run.scheduleBuild(cause))}
 
